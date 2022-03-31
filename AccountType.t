@@ -4,3 +4,12 @@ Account interface {
         status(id uint8) (status string)
 
 }
+
+type AccountStruct struct {
+
+	AccountID uint8
+	Name string
+	Balance float64
+	Status string
+
+}
