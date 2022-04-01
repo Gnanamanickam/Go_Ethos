@@ -13,8 +13,8 @@ export GOLINUXINCLUDE=/usr/lib64/go/pkg/linux_$(GOARCH)
 export ETHOSROOT=server/rootfs
 export MINIMALTDROOT=server/minimaltdfs
 
-.PHONY: all install clean
-all: AccountClient AccountServer
+.PHONY: all install
+all: AccountServer
 
 Account.go: Account.t
 	$(ETN2GO) . Account main $^
@@ -25,19 +25,21 @@ AccountServer: AccountServer.go Account.go
 AccountClient: AccountClient.go Account.go
 	ethosGo $^
 
-install: clean AccountClient AccountServer
+install: AccountClient AccountServer
+	sudo rm -rf server/
 	(ethosParams server && cd server && ethosMinimaltdBuilder)
 	echo 7 > server/param/sleepTime
 	ethosTypeInstall Account
 	ethosDirCreate $(ETHOSROOT)/services/Account $(ETHOSROOT)/types/spec/Account/Account all
-	ethosDirCreate $(ETHOSROOT)/services/Account $(ETHOSROOT)/types/spec/Account/AccountStruct all
+	ethosDirCreate $(ETHOSROOT)/services/Account $(ETHOSROOT)/types/spec/AccountStruct/AccountStruct all
 	cp AccountServer $(ETHOSROOT)/programs
 	cp AccountClient $(ETHOSROOT)/programs
 #   install -D AccountServer AccountClient $(ETHOSROOT)/programs
 	ethosStringEncode /programs/AccountServer > $(ETHOSROOT)/etc/init/services/AccountServer
+	ethosStringEncode /programs/AccountClient > $(ETHOSROOT)/etc/init/services/AccountClient
 
 clean:
-	sudo rm -rf server
+	sudo rm -rf server/
 	rm -rf Account/ AccountIndex/
 	rm -f Account.go
 	rm -f AccountServer

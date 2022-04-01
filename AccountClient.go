@@ -42,20 +42,19 @@ func main() {
 	account1 := AccountStruct{AccountID: 1, Name: "Gnani", Balance: 1250.0, Status: "Active"}
 	account2 := AccountStruct{AccountID: 2, Name: "Prem", Balance: 575.0, Status: "Active"}
 
-	altEthos.LogToDirectory("assignment/Client")
+	altEthos.LogToDirectory("assignment/accountClient")
 	log.Printf("Account Client before_call \n")
 
 	fd, status := altEthos.IpcRepeat("Account", "", nil)
 	if status != syscall.StatusOk { 
 		log.Printf("Ipc failed: %v \n", status)
 		altEthos.Exit(status)
-
 	}
 
-		call := AccountgetBalance{account1}
-		status = altEthos.ClientCall(fd, &call)
+	call := AccountgetBalance{account1}
+	status = altEthos.ClientCall(fd, &call)
 		
-		if status != syscall.StatusOk {
+	if status != syscall.StatusOk {
 			log.Printf("Client Call Failed: %v \n", status)
 			altEthos.Exit(status)
 	}

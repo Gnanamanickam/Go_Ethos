@@ -81,20 +81,24 @@ func getStatus(account AccountStruct) (AccountProcedure) {
 
 func main() {
 	
-	altEthos.LogToDirectory("assignment/Server")
+	altEthos.LogToDirectory("")
 	// userName := altEthos.GetUser()
 	// path := "/user/" + userName + "AccountServer"
-
+	log.Printf("Inside main function \n")
 	listeningFd, status := altEthos.Advertise("Account")
+	log.Printf("Status is %v \n", status)
+	log.Printf("ListeningFd is %v \n", listeningFd)
 	if status != syscall.StatusOk {
 		log.Printf("Advertising service failed: %s\n", status)
 		altEthos.Exit(status)
 	}
 
 	for {
+		log.Printf("Inside for loop before import\n")
 		_, fd, status := altEthos.Import(listeningFd)
+		log.Printf("Inside for loop after import\n")
 		if status != syscall.StatusOk {
-			log.Println(" Error calling Import %v \n", status)
+			log.Printf(" Error calling Import %v \n", status)
 			altEthos.Exit(status)
 		}
 
