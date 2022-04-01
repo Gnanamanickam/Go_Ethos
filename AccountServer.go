@@ -86,15 +86,17 @@ func readFile(path string, ID uint8) (AccountStruct) {
 func main() {
 
 	userName := altEthos.GetUser()
-	path := "/home/" + userName + "assignment"
+	path := "/user/" + userName
 
 	account1 := AccountStruct{AccountID: 1, Name: "Gnani", Balance: 1250.0, Status: "Active"}
 	account2 := AccountStruct{AccountID: 2, Name: "Prem", Balance: 575.0, Status: "Active"}
 	account3 := AccountStruct{AccountID: 3, Name: "Virat", Balance: 677.0, Status: "Closed"}
+	account4 := AccountStruct{AccountID: 4, Name: "Dhoni", Balance: 890.0, Status: "Active"}
 
 	writeToFile(path, "account1", account1)
 	writeToFile(path, "account2", account2)
 	writeToFile(path, "account3", account3)
+	writeToFile(path, "account4", account4)
 
 	
 	altEthos.LogToDirectory("assignment/accountServer")
