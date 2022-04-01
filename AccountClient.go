@@ -33,17 +33,15 @@ func transferReply(Amount1 float64, Amount2 float64) (AccountProcedure) {
 }
 
 func getStatusReply(Status string) (AccountProcedure) {
-	log.Printf("Account Client : Status: %v \n, Status")
+	log.Printf("Account Client : Status: %s \n", Status)
 	return nil
 }
 
 func main() {
-
-	account1 := AccountStruct{AccountID: 1, Name: "Gnani", Balance: 1250.0, Status: "Active"}
-	account2 := AccountStruct{AccountID: 2, Name: "Prem", Balance: 575.0, Status: "Active"}
-
 	altEthos.LogToDirectory("assignment/accountClient")
 	log.Printf("Account Client before_call \n")
+	account1 := AccountStruct{AccountID: 1, Name: "Gnani", Balance: 1250.0, Status: "Active"}
+	account2 := AccountStruct{AccountID: 2, Name: "Prem", Balance: 575.0, Status: "Active"}
 
 	fd, status := altEthos.IpcRepeat("Account", "", nil)
 	if status != syscall.StatusOk { 
