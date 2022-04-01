@@ -3,7 +3,7 @@ package main
 import (
 	"ethos/syscall"
 	"ethos/altEthos"
-    "ethos/kernelTypes"
+    // "ethos/kernelTypes"
     // "ethos/defined"
 	"log"
 	// "math"
@@ -48,18 +48,18 @@ func getStatus(account AccountStruct) (AccountProcedure) {
 
 func writeToFile(path string, value string, account AccountStruct) {
 
-	var data = kernelTypes.String(value)
-	_, status := altEthos.DirectoryOpen(path)
-	if status != syscall.StatusOk {
-		log.Printf("Open Directory Failed %v: %v\n", path, status)
-		status = altEthos.DirectoryCreate(path, &data, "variable")
-		if status != syscall.StatusOk {
-			log.Printf("Create Directory Failed %v: %v\n", path, status)
-		}
-		altEthos.DirectoryOpen(path)	
-	}
+	// var data = kernelTypes.String(value)
+	// _, status := altEthos.DirectoryOpen(path)
+	// if status != syscall.StatusOk {
+	// 	log.Printf("Open Directory Failed %v: %v\n", path, status)
+	// 	status = altEthos.DirectoryCreate(path, &data, "variable")
+	// 	if status != syscall.StatusOk {
+	// 		log.Printf("Create Directory Failed %v: %v\n", path, status)
+	// 	}
+	// 	altEthos.DirectoryOpen(path)	
+	// }
 
-	status = altEthos.Write(path + "/account_" + strconv.Itoa(int(account.AccountID)), &account)
+	status := altEthos.Write(path + "/account_" + strconv.Itoa(int(account.AccountID)), &account)
 	if status != syscall.StatusOk {
 		log.Printf("Error Writing to %v: %v\n", path, status)
 	}
