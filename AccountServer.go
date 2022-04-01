@@ -3,10 +3,11 @@ package main
 import (
 	"ethos/syscall"
 	"ethos/altEthos"
-    // "ethos/kernelTypes"
+    "ethos/kernelTypes"
     // "ethos/defined"
 	"log"
 	// "math"
+	"strconv"
 )
 
 func init() {
@@ -44,46 +45,60 @@ func getStatus(account AccountStruct) (AccountProcedure) {
 	return &AccountgetStatusReply{account.Status}
 }
 
-// var fd syscall.Fd
-// var fa kernelTypes.AccountServer
-// var readData
 
-// func writeToFile(data string, path string) {
+func writeToFile(path string, value string, account AccountStruct) {
 
-// 	fd, status := altEthos.DirectoryOpen(path)
-// 	if status != syscall.StatusOk {
-// 		logger.Fatalf("Open Directory Failed %v: %v\n", path, status)
-// 		status = altEthos.DirectoryCreate(path, &fa, "label")
-// 		if status != syscall.StatusOk {
-// 			logger.Fatalf("Create Directory Failed %v: %v\n", path, status)
-// 		}
-// 	}
+	var data = kernelTypes.String(value)
+	_, status := altEthos.DirectoryOpen(path)
+	if status != syscall.StatusOk {
+		log.Printf("Open Directory Failed %v: %v\n", path, status)
+		status = altEthos.DirectoryCreate(path, &data, "variable")
+		if status != syscall.StatusOk {
+			log.Printf("Create Directory Failed %v: %v\n", path, status)
+		}
+		altEthos.DirectoryOpen(path)	
+	}
 
-// 	status = altEthos.writeStream(fd, &data)
-// 	if status != syscall.StatusOk {
-// 		logger.Fatalf("Error Writing to %v: %v\n", path, status)
-// }
+	status = altEthos.Write(path + "/account_" + strconv.Itoa(int(account.AccountID)), &account)
+	if status != syscall.StatusOk {
+		log.Printf("Error Writing to %v: %v\n", path, status)
+	}
+}
 
-// func readFile(data string, path string) {
+func readFile(path string, ID uint8) (AccountStruct) {
+	
+	var data AccountStruct
+	// _, status := altEthos.DirectoryOpen(path)
+	// if status != syscall.StatusOk {
+	// 	log.Printf("Open Directory Failed %v: %v\n", path, status)
+	// 	return "failed"
+	// }
 
-// 	fd, status := altEthos.DirectoryOpen(path)
-// 	if status != syscall.StatusOk {
-// 		logger.Fatalf("Open Directory Failed %v: %v\n", path, status)
-// 	}
-// 	else {
-// 		status = altEthos.readStream(fd, &readData)
-// 		if status != syscall.StatusOk {
-// 			logger.Fatalf("Error Reading file %v: %v\n", path, status)
-// 		}
-// 	}
-// 	log.Printf("Value is %v \n", readData)
-// }
+	status := altEthos.Read(path + "/account_" + strconv.Itoa(int(ID)), &data)
+	if status != syscall.StatusOk {
+		log.Printf("Error Reading file %v: %v\n", path, status)	
+		altEthos.Exit(status)
+	}
+
+	return data
+}
 
 func main() {
+
+	userName := altEthos.GetUser()
+	path := "/home/" + userName + "assignment"
+
+	account1 := AccountStruct{AccountID: 1, Name: "Gnani", Balance: 1250.0, Status: "Active"}
+	account2 := AccountStruct{AccountID: 2, Name: "Prem", Balance: 575.0, Status: "Active"}
+	account3 := AccountStruct{AccountID: 3, Name: "Virat", Balance: 677.0, Status: "Closed"}
+
+	writeToFile(path, "account1", account1)
+	writeToFile(path, "account2", account2)
+	writeToFile(path, "account3", account3)
+
 	
 	altEthos.LogToDirectory("assignment/accountServer")
-	userName := altEthos.GetUser()
-	path := "/user/" + userName + "AccountServer"
+
 	log.Printf("Inside main function \n")
 	listeningFd, status := altEthos.Advertise("Account")
 	log.Printf("Status is %v \n", status)
