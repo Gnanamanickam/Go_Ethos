@@ -16,31 +16,31 @@ export MINIMALTDROOT=server/minimaltdfs
 .PHONY: all install clean
 all: AccountClient AccountServer
 
-AccountType.go: AccountType.t
-$(ETN2GO) . AccountType main $^
+Account.go: Account.t
+	$(ETN2GO) . Account main $^
 
-AccountServer: AccountServer.go AccountType.go
-ethosGo $^
+AccountServer: AccountServer.go Account.go
+	ethosGo $^
 
-AccountClient: AccountClient.go AccountType.go
-ethosGo $^
+AccountClient: AccountClient.go Account.go
+	ethosGo $^
 
 install: clean AccountClient AccountServer
-(ethosParams server && cd server && ethosMinimaltdBuilder)
-echo 7 > server/param/sleepTime
-ethosTypeInstall AccountType
-ethosDirCreate $(ETHOSROOT)/services/AccountType $(ETHOSROOT)/types/spec/AccountType/Account all
-ethosDirCreate $(ETHOSROOT)/services/AccountType $(ETHOSROOT)/types/spec/AccountType/AccountStruct all
-cp AccountServer $(ETHOSROOT)/programs
-cp AccountClient $(ETHOSROOT)/programs
-# install -D AccountServer AccountClient $(ETHOSROOT)/programs
-ethosStringEncode /programs/AccountServer > $(ETHOSROOT)/etc/init/services/AccountServer
+	(ethosParams server && cd server && ethosMinimaltdBuilder)
+	echo 7 > server/param/sleepTime
+	ethosTypeInstall Account
+	ethosDirCreate $(ETHOSROOT)/services/Account $(ETHOSROOT)/types/spec/Account/Account all
+	ethosDirCreate $(ETHOSROOT)/services/Account $(ETHOSROOT)/types/spec/Account/AccountStruct all
+	cp AccountServer $(ETHOSROOT)/programs
+	cp AccountClient $(ETHOSROOT)/programs
+#   install -D AccountServer AccountClient $(ETHOSROOT)/programs
+	ethosStringEncode /programs/AccountServer > $(ETHOSROOT)/etc/init/services/AccountServer
 
 clean:
-sudo rm -rf server
-rm -rf AccountType/ AccountTypeIndex/
-rm -f AccountType.go
-rm -f AccountServer
-rm -f AccountServer.goo.ethos
-rm -f AccountClient
-rm -f AccountClient.goo.ethos
+	sudo rm -rf server
+	rm -rf Account/ AccountIndex/
+	rm -f Account.go
+	rm -f AccountServer
+	rm -f AccountServer.goo.ethos
+	rm -f AccountClient
+	rm -f AccountClient.goo.ethos
