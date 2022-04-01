@@ -26,6 +26,7 @@ func getBalance(account AccountStruct) (AccountProcedure) {
 	return &AccountgetBalanceReply{account.Balance}
 }
 
+
 func transfer(From_ID AccountStruct, To_ID AccountStruct, amount float64) (AccountProcedure) {
 	if From_ID.Balance <= amount {
 		log.Printf("Amount given is lesser than the balance \n")
@@ -58,8 +59,9 @@ func writeToFile(path string, value string, account AccountStruct) {
 	// 	}
 	// 	altEthos.DirectoryOpen(path)	
 	// }
-
+	altEthos.DirectoryCreate(path, &account, "variable")
 	status := altEthos.Write(path + "/account_" + strconv.Itoa(int(account.AccountID)), &account)
+	log.Printf("Status is %v \n", status)
 	if status != syscall.StatusOk {
 		log.Printf("Error Writing to %v: %v\n", path, status)
 	}
@@ -86,17 +88,19 @@ func readFile(path string, ID uint8) (AccountStruct) {
 func main() {
 
 	userName := altEthos.GetUser()
-	path := "/user/" + userName
+	path := "/user/" + userName + "/account"
 
 	account1 := AccountStruct{AccountID: 1, Name: "Gnani", Balance: 1250.0, Status: "Active"}
 	account2 := AccountStruct{AccountID: 2, Name: "Prem", Balance: 575.0, Status: "Active"}
 	account3 := AccountStruct{AccountID: 3, Name: "Virat", Balance: 677.0, Status: "Closed"}
 	account4 := AccountStruct{AccountID: 4, Name: "Dhoni", Balance: 890.0, Status: "Active"}
 
+	log.Printf("Writing to file \n")
 	writeToFile(path, "account1", account1)
 	writeToFile(path, "account2", account2)
 	writeToFile(path, "account3", account3)
 	writeToFile(path, "account4", account4)
+	log.Printf("Writing to file done \n")
 
 	
 	altEthos.LogToDirectory("assignment/accountServer")
