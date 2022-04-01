@@ -1,8 +1,8 @@
 Account interface { 
 		
-        getBalance(account AccountStruct) (float64)
-		transfer(From_ID AccountStruct, To_ID AccountStruct, amount float64) (float64, float64)
-        getStatus(account AccountStruct) (string)
+        getBalance(accountName string) (float64)
+		transfer(From_ID string, To_ID string, amount float64) (float64, float64)
+        getStatus(accountName string) (string)
 
 }
 

@@ -21,27 +21,31 @@ func init() {
 // 	log.Printf("Account Server: create Account \n")
 // }
 
-func getBalance(account AccountStruct) (AccountProcedure) {
+func getBalance(accountName string) (AccountProcedure) {
+	account := readFile("/user/" + altEthos.GetUser() + "/account", accountName)
 	log.Printf("Account Server: get Balance \n")
 	return &AccountgetBalanceReply{account.Balance}
 }
 
 
-func transfer(From_ID AccountStruct, To_ID AccountStruct, amount float64) (AccountProcedure) {
-	if From_ID.Balance <= amount {
+func transfer(From_ID string, To_ID string, amount float64) (AccountProcedure) {
+	account1 := readFile("/user/" + altEthos.GetUser() + "/account", From_ID)
+	account2 := readFile("/user/" + altEthos.GetUser() + "/account", To_ID)
+	if account1.Balance <= amount {
 		log.Printf("Amount given is lesser than the balance \n")
 	} else {
-		From_ID.Balance = From_ID.Balance - amount
-		To_ID.Balance = To_ID.Balance + amount
+		account1.Balance = account1.Balance - amount
+		account2.Balance = account2.Balance + amount
 		log.Printf("Amount Transferred : %v \n", amount)
-		log.Printf("Current balance of From_ID: %v \n", From_ID.Balance)
-		log.Printf("Current balance of To_ID: %v \n", To_ID.Balance)
+		log.Printf("Current balance of From_ID: %v \n", account1.Balance)
+		log.Printf("Current balance of To_ID: %v \n", account2.Balance)
 		log.Printf("Account Server: account Transfer \n")
 	}
-	return &AccounttransferReply{From_ID.Balance, To_ID.Balance}
+	return &AccounttransferReply{account1.Balance, account2.Balance}
 }
 
-func getStatus(account AccountStruct) (AccountProcedure) {
+func getStatus(accountName string) (AccountProcedure) {
+	account := readFile("/user/" + altEthos.GetUser() + "/account", accountName)
 	log.Printf("Account Server: get Status \n")
 	return &AccountgetStatusReply{account.Status}
 }
@@ -67,7 +71,7 @@ func writeToFile(path string, value string, account AccountStruct) {
 	}
 }
 
-func readFile(path string, ID uint8) (AccountStruct) {
+func readFile(path string, ID string) (AccountStruct) {
 	
 	var data AccountStruct
 	// _, status := altEthos.DirectoryOpen(path)
@@ -76,7 +80,7 @@ func readFile(path string, ID uint8) (AccountStruct) {
 	// 	return "failed"
 	// }
 
-	status := altEthos.Read(path + "/account_" + strconv.Itoa(int(ID)), &data)
+	status := altEthos.Read(path + "/account_" + ID, &data)
 	if status != syscall.StatusOk {
 		log.Printf("Error Reading file %v: %v\n", path, status)	
 		altEthos.Exit(status)

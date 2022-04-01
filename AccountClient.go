@@ -40,9 +40,6 @@ func getStatusReply(Status string) (AccountProcedure) {
 func main() {
 	altEthos.LogToDirectory("assignment/accountClient")
 	log.Printf("Account Client before_call \n")
-	account1 := AccountStruct{AccountID: 1, Name: "Gnani", Balance: 1250.0, Status: "Active"}
-	account2 := AccountStruct{AccountID: 2, Name: "Prem", Balance: 575.0, Status: "Active"}
-	account3 := AccountStruct{AccountID: 3, Name: "Virat", Balance: 677.0, Status: "Closed"}
 
 	fd, status := altEthos.IpcRepeat("Account", "", nil)
 	if status != syscall.StatusOk { 
@@ -50,7 +47,7 @@ func main() {
 		altEthos.Exit(status)
 	}
 
-	call := AccountgetBalance{account1}
+	call := AccountgetBalance{"1"}
 	status = altEthos.ClientCall(fd, &call)
 		
 	if status != syscall.StatusOk {
@@ -65,7 +62,7 @@ func main() {
 
 	}
 
-		call1 := Accounttransfer{account1, account2, float64(100.0)}
+		call1 := Accounttransfer{"1", "2", float64(100.0)}
 		status1 = altEthos.ClientCall(fd1, &call1)
 		
 		if status != syscall.StatusOk {
@@ -80,7 +77,7 @@ func main() {
 
 	}
 
-		call2 := AccountgetStatus{account3}
+		call2 := AccountgetStatus{"3"}
 		status2 = altEthos.ClientCall(fd2, &call2)
 		
 		if status != syscall.StatusOk {
