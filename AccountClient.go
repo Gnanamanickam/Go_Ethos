@@ -23,7 +23,7 @@ func init() {
 // }
 
 func getBalanceReply(Amount float64) (AccountProcedure) {
-	log.Printf("Account Client : Received Balance: %v \n", Amount)
+	log.Printf("Account Client, Balance: %v \n", Amount)
 	return nil
 }
 
@@ -72,6 +72,21 @@ func main() {
 		if status != syscall.StatusOk {
 			log.Printf("Client Call Failed: %v \n", status1)
 			altEthos.Exit(status1)
+	}
+
+	fd2, status2 := altEthos.IpcRepeat("Account", "", nil)
+	if status2 != syscall.StatusOk { 
+		log.Printf("Ipc failed: %v \n", status2)
+		altEthos.Exit(status2)
+
+	}
+
+		call2 := AccountgetStatus{account1}
+		status2 = altEthos.ClientCall(fd2, &call2)
+		
+		if status != syscall.StatusOk {
+			log.Printf("Client Call Failed: %v \n", status2)
+			altEthos.Exit(status2)
 	}
 
 	log.Printf("Account Client done \n")
