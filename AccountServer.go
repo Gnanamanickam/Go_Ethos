@@ -82,8 +82,8 @@ func getStatus(account AccountStruct) (AccountProcedure) {
 func main() {
 	
 	altEthos.LogToDirectory("assignment/accountServer")
-	// userName := altEthos.GetUser()
-	// path := "/user/" + userName + "AccountServer"
+	userName := altEthos.GetUser()
+	path := "/user/" + userName + "AccountServer"
 	log.Printf("Inside main function \n")
 	listeningFd, status := altEthos.Advertise("Account")
 	log.Printf("Status is %v \n", status)
